@@ -250,8 +250,8 @@
             <div class="stat-group">
                 <div class="stat-title">生命属性</div>
                 <div class="input-group">
-                    <label for="living">当前生命格数</label>
-                    <input type="number" id="living" step="1" min="0" max="20" placeholder="输入当前生命格数">
+                    <label for="living">当前缺少的生命格数</label>
+                    <input type="number" id="living" step="1" min="0" max="20" placeholder="输入当前缺少的生命格数">
                     <p id="error-message-living" style="color: red; display: none;">请输入 0 到 20 之间的数字！</p>
                 </div>
             </div>
@@ -259,8 +259,8 @@
             <div class="stat-group">
                 <div class="stat-title">物理攻击属性</div>
                 <div class="input-group">
-                    <label for="material_attack">当前物理攻击</label>
-                    <input type="number" id="material_attack" step="1" min="0" max="20" placeholder="输入当前物理攻击格数">
+                    <label for="material_attack">当前缺少的物理攻击格数</label>
+                    <input type="number" id="material_attack" step="1" min="0" max="20" placeholder="输入当前缺少的物理攻击格数">
                     <p id="error-message-material-attack" style="color: red; display: none;">请输入 0 到 20 之间的数字！</p>
                 </div>
             </div>
@@ -268,8 +268,8 @@
             <div class="stat-group">
                 <div class="stat-title">法术攻击属性</div>
                 <div class="input-group">
-                    <label for="magic_attack">当前法术攻击</label>
-                    <input type="number" id="magic_attack" step="1" min="0" max="20" placeholder="输入当前法术攻击格数">
+                    <label for="magic_attack">当前缺少的法术攻击格数</label>
+                    <input type="number" id="magic_attack" step="1" min="0" max="20" placeholder="输入当前缺少的法术攻击格数">
                     <p id="error-message-magic-attack" style="color: red; display: none;">请输入 0 到 20 之间的数字！</p>
                 </div>
             </div>
@@ -277,8 +277,8 @@
             <div class="stat-group">
                 <div class="stat-title">法术防御属性</div>
                 <div class="input-group">
-                    <label for="magic_defense">当前法术防御</label>
-                    <input type="number" id="magic_defense" step="1" min="0" max="20" placeholder="输入当前法术防御格数">
+                    <label for="magic_defense">当前缺少的法术防御格数</label>
+                    <input type="number" id="magic_defense" step="1" min="0" max="20" placeholder="输入当前缺少的法术防御格数">
                     <p id="error-message-magic-defense" style="color: red; display: none;">请输入 0 到 20 之间的数字！</p>
                 </div>
             </div>
@@ -286,8 +286,8 @@
             <div class="stat-group">
                 <div class="stat-title">物理防御属性</div>
                 <div class="input-group">
-                    <label for="material_defense">当前物理防御</label>
-                    <input type="number" id="material_defense" step="1" min="0" max="20" placeholder="输入当前物理防御格数">
+                    <label for="material_defense">当前缺少的物理防御格数</label>
+                    <input type="number" id="material_defense" step="1" min="0" max="20" placeholder="输入当前缺少的物理防御格数">
                     <p id="error-message-material-defense" style="color: red; display: none;">请输入 0 到 20 之间的数字！</p>
             </div>
         </div>
@@ -407,11 +407,11 @@
             
             function calculate() {
                 try {
-                    const living = getIntInput('living');
-                    const material_attack = getIntInput('material_attack');
-                    const magic_attack = getIntInput('magic_attack');
-                    const magic_defense = getIntInput('magic_defense');
-                    const material_defense = getIntInput('material_defense');
+                    const living = 20 - getIntInput('living');
+                    const material_attack = 20 - getIntInput('material_attack');
+                    const magic_attack = 20 - getIntInput('magic_attack');
+                    const magic_defense = 20 - getIntInput('magic_defense');
+                    const material_defense = 20 - getIntInput('material_defense');
                     
                     // 更新UI显示当前值
                     document.getElementById('current-living').textContent = `生命: ${living}`;
