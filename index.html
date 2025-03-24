@@ -250,81 +250,45 @@
             <div class="stat-group">
                 <div class="stat-title">生命属性</div>
                 <div class="input-group">
-                    <label for="living_upper">生命上限</label>
-                    <input type="number" id="living_upper" step="0.01" placeholder="输入生命上限">
-                </div>
-                <div class="input-group">
-                    <label for="living_curr">当前生命值</label>
-                    <input type="number" id="living_curr" step="0.01" placeholder="输入当前生命值">
-                </div>
-                <div class="input-group">
-                    <label for="living_unit">一个果子增加的生命值</label>
-                    <input type="number" id="living_unit" step="0.01" placeholder="输入一个果子可以增加的生命值">
+                    <label for="living">当前生命格数</label>
+                    <input type="number" id="living" step="1" min="0" max="20" placeholder="输入当前生命格数">
+                    <p id="error-message-living" style="color: red; display: none;">请输入 0 到 20 之间的数字！</p>
                 </div>
             </div>
             
             <div class="stat-group">
                 <div class="stat-title">物理攻击属性</div>
                 <div class="input-group">
-                    <label for="material_attack_upper">物理攻击上限</label>
-                    <input type="number" id="material_attack_upper" step="0.01" placeholder="输入物理攻击上限">
-                </div>
-                <div class="input-group">
-                    <label for="material_attack_curr">当前物理攻击</label>
-                    <input type="number" id="material_attack_curr" step="0.01" placeholder="输入当前物理攻击">
-                </div>
-                <div class="input-group">
-                    <label for="material_attack_unit">一个果子增加的物理攻击</label>
-                    <input type="number" id="material_attack_unit" step="0.01" placeholder="输入一个果子可以增加的物理攻击">
+                    <label for="material_attack">当前物理攻击</label>
+                    <input type="number" id="material_attack" step="1" min="0" max="20" placeholder="输入当前物理攻击格数">
+                    <p id="error-message-material-attack" style="color: red; display: none;">请输入 0 到 20 之间的数字！</p>
                 </div>
             </div>
             
             <div class="stat-group">
                 <div class="stat-title">法术攻击属性</div>
                 <div class="input-group">
-                    <label for="magic_attack_upper">法术攻击上限</label>
-                    <input type="number" id="magic_attack_upper" step="0.01" placeholder="输入法术攻击上限">
-                </div>
-                <div class="input-group">
-                    <label for="magic_attack_curr">当前法术攻击</label>
-                    <input type="number" id="magic_attack_curr" step="0.01" placeholder="输入当前法术攻击">
-                </div>
-                <div class="input-group">
-                    <label for="magic_attack_unit">一个果子增加的法术攻击</label>
-                    <input type="number" id="magic_attack_unit" step="0.01" placeholder="输入一个果子可以增加的法术攻击">
+                    <label for="magic_attack">当前法术攻击</label>
+                    <input type="number" id="magic_attack" step="1" min="0" max="20" placeholder="输入当前法术攻击格数">
+                    <p id="error-message-magic-attack" style="color: red; display: none;">请输入 0 到 20 之间的数字！</p>
                 </div>
             </div>
             
             <div class="stat-group">
                 <div class="stat-title">法术防御属性</div>
                 <div class="input-group">
-                    <label for="magic_defense_upper">法术防御上限</label>
-                    <input type="number" id="magic_defense_upper" step="0.01" placeholder="输入法术防御上限">
-                </div>
-                <div class="input-group">
-                    <label for="magic_defense_curr">当前法术防御</label>
-                    <input type="number" id="magic_defense_curr" step="0.01" placeholder="输入当前法术防御">
-                </div>
-                <div class="input-group">
-                    <label for="magic_defense_unit">一个果子增加的法术防御</label>
-                    <input type="number" id="magic_defense_unit" step="0.01" placeholder="输入一个果子可以增加的法术防御">
+                    <label for="magic_defense">当前法术防御</label>
+                    <input type="number" id="magic_defense" step="1" min="0" max="20" placeholder="输入当前法术防御格数">
+                    <p id="error-message-magic-defense" style="color: red; display: none;">请输入 0 到 20 之间的数字！</p>
                 </div>
             </div>
             
             <div class="stat-group">
                 <div class="stat-title">物理防御属性</div>
                 <div class="input-group">
-                    <label for="material_defense_upper">物理防御上限</label>
-                    <input type="number" id="material_defense_upper" step="0.01" placeholder="输入物理防御上限">
-                </div>
-                <div class="input-group">
-                    <label for="material_defense_curr">当前物理防御</label>
-                    <input type="number" id="material_defense_curr" step="0.01" placeholder="输入当前物理防御">
-                </div>
-                <div class="input-group">
-                    <label for="material_defense_unit">一个果子增加的物理防御</label>
-                    <input type="number" id="material_defense_unit" step="0.01" placeholder="输入一个果子可以增加的物理防御">
-                </div>
+                    <label for="material_defense">当前物理防御</label>
+                    <input type="number" id="material_defense" step="1" min="0" max="20" placeholder="输入当前物理防御格数">
+                    <p id="error-message-material-defense" style="color: red; display: none;">请输入 0 到 20 之间的数字！</p>
             </div>
         </div>
         
@@ -353,39 +317,88 @@
     </div>
 
     <script>
+        document.getElementById("living").addEventListener("input", function () {
+            const input = parseFloat(this.value); // 获取输入值
+            const errorMessage = document.getElementById("error-message-living");
+
+            if (isNaN(input) || input < 0 || input > 20) {
+                errorMessage.style.display = "block"; // 显示错误提示
+                this.value = Math.min(20, Math.max(0, input)); // 强制将值限制在 0 到 20 之间
+            } else {
+                errorMessage.style.display = "none"; // 隐藏错误提示
+            }
+        });
+
+        document.getElementById("magic_defense").addEventListener("input", function () {
+            const input = parseFloat(this.value); // 获取输入值
+            const errorMessage = document.getElementById("error-message-magic-defense");
+
+            if (isNaN(input) || input < 0 || input > 20) {
+                errorMessage.style.display = "block"; // 显示错误提示
+                this.value = Math.min(20, Math.max(0, input)); // 强制将值限制在 0 到 20 之间
+            } else {
+                errorMessage.style.display = "none"; // 隐藏错误提示
+            }
+        });
+
+        document.getElementById("magic_attack").addEventListener("input", function () {
+            const input = parseFloat(this.value); // 获取输入值
+            const errorMessage = document.getElementById("error-message-magic-attack");
+
+            if (isNaN(input) || input < 0 || input > 20) {
+                errorMessage.style.display = "block"; // 显示错误提示
+                this.value = Math.min(20, Math.max(0, input)); // 强制将值限制在 0 到 20 之间
+            } else {
+                errorMessage.style.display = "none"; // 隐藏错误提示
+            }
+        });
+
+        document.getElementById("material_defense").addEventListener("input", function () {
+            const input = parseFloat(this.value); // 获取输入值
+            const errorMessage = document.getElementById("error-message-material-defense");
+
+            if (isNaN(input) || input < 0 || input > 20) {
+                errorMessage.style.display = "block"; // 显示错误提示
+                this.value = Math.min(20, Math.max(0, input)); // 强制将值限制在 0 到 20 之间
+            } else {
+                errorMessage.style.display = "none"; // 隐藏错误提示
+            }
+        });
+
+        document.getElementById("material_attack").addEventListener("input", function () {
+            const input = parseFloat(this.value); // 获取输入值
+            const errorMessage = document.getElementById("error-message-material-attack");
+
+            if (isNaN(input) || input < 0 || input > 20) {
+                errorMessage.style.display = "block"; // 显示错误提示
+                this.value = Math.min(20, Math.max(0, input)); // 强制将值限制在 0 到 20 之间
+            } else {
+                errorMessage.style.display = "none"; // 隐藏错误提示
+            }
+        });
+
         document.addEventListener('DOMContentLoaded', function() {
             const calculateBtn = document.getElementById('calculate');
             calculateBtn.addEventListener('click', calculate);
             
-            // 填充一些示例数据（可选）
-            function fillSampleData() {
-                document.getElementById('living_upper').value = '100';
-                document.getElementById('living_curr').value = '90';
-                document.getElementById('living_unit').value = '0.5';
-                document.getElementById('material_attack_upper').value = '50';
-                document.getElementById('material_attack_curr').value = '45';
-                document.getElementById('material_attack_unit').value = '0.25';
-                document.getElementById('magic_attack_upper').value = '40';
-                document.getElementById('magic_attack_curr').value = '35';
-                document.getElementById('magic_attack_unit').value = '0.25';
-                document.getElementById('magic_defense_upper').value = '30';
-                document.getElementById('magic_defense_curr').value = '25';
-                document.getElementById('magic_defense_unit').value = '0.25';
-                document.getElementById('material_defense_upper').value = '30';
-                document.getElementById('material_defense_curr').value = '25';
-                document.getElementById('material_defense_unit').value = '0.25';
-            }
             
-            // 如果需要示例数据，取消下面这行的注释
-            // fillSampleData();
-            
-            function getFloatInput(id) {
+            function getIntInput(id) {
                 const value = document.getElementById(id).value;
                 if (!value || isNaN(parseFloat(value))) {
-                    alert(`请为${id.replace(/_/g, ' ')}输入有效的数字！`);
+                    if (id == "living") {
+                        alert(`请为生命属性输入有效的数字！`);
+                    } else if (id == "material_defense") {
+                        alert(`请为物理防御属性输入有效的数字`);
+                    } else if (id == "material_attack") {
+                        alert(`请为物理攻击属性输入有效的数字`);
+                    } else if (id == "magic_attack") {
+                        alert(`请为法术攻击属性输入有效的数字`);
+                    } else if (id == "magic_defense") {
+                        alert(`请为法术防御属性输入有效的数字`);
+                    }
                     throw new Error('Invalid input');
                 }
-                return Math.round(parseFloat(value) * 100) / 100;
+                return parseInt(value);
             }
             
             function getScore(living, material_attack, material_defense, magic_attack, magic_defense) {
@@ -394,29 +407,11 @@
             
             function calculate() {
                 try {
-                    // 获取所有输入
-                    const living_upper = getFloatInput('living_upper');
-                    const living_curr = getFloatInput('living_curr');
-                    const living_unit = getFloatInput('living_unit');
-                    const material_attack_upper = getFloatInput('material_attack_upper');
-                    const material_attack_curr = getFloatInput('material_attack_curr');
-                    const material_attack_unit = getFloatInput('material_attack_unit');
-                    const magic_attack_upper = getFloatInput('magic_attack_upper');
-                    const magic_attack_curr = getFloatInput('magic_attack_curr');
-                    const magic_attack_unit = getFloatInput('magic_attack_unit');
-                    const magic_defense_upper = getFloatInput('magic_defense_upper');
-                    const magic_defense_curr = getFloatInput('magic_defense_curr');
-                    const magic_defense_unit = getFloatInput('magic_defense_unit');
-                    const material_defense_upper = getFloatInput('material_defense_upper');
-                    const material_defense_curr = getFloatInput('material_defense_curr');
-                    const material_defense_unit = getFloatInput('material_defense_unit');
-                    
-                    // 计算各项值
-                    const living = Math.ceil(20 - Math.round((living_upper - living_curr) * 100) / 100 / living_unit);
-                    const material_attack = Math.ceil(20 - Math.round((material_attack_upper - material_attack_curr) * 100) / 100 / material_attack_unit);
-                    const magic_attack = Math.ceil(20 - Math.round((magic_attack_upper - magic_attack_curr) * 100) / 100 / magic_attack_unit);
-                    const magic_defense = Math.ceil(20 - Math.round((magic_defense_upper - magic_defense_curr) * 100) / 100 / magic_defense_unit);
-                    const material_defense = Math.ceil(20 - Math.round((material_defense_upper - material_defense_curr) * 100) / 100 / material_defense_unit);
+                    const living = getIntInput('living');
+                    const material_attack = getIntInput('material_attack');
+                    const magic_attack = getIntInput('magic_attack');
+                    const magic_defense = getIntInput('magic_defense');
+                    const material_defense = getIntInput('material_defense');
                     
                     // 更新UI显示当前值
                     document.getElementById('current-living').textContent = `生命: ${living}`;
