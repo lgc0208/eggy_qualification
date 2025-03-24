@@ -1,0 +1,543 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>艾比资质计算器</title>
+    <style>
+        :root {
+            --primary: #4a6fa5;
+            --primary-light: #6889bd;
+            --primary-dark: #345987;
+            --secondary: #5cb85c;
+            --secondary-light: #77cc77;
+            --secondary-dark: #4a9e4a;
+            --text: #333;
+            --text-light: #666;
+            --background: #f8f9fa;
+            --card-bg: #fff;
+            --border: #dee2e6;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--background);
+            color: var(--text);
+            margin: 0;
+            padding: 20px;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background-color: var(--card-bg);
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            padding: 25px;
+        }
+
+        h1 {
+            color: var(--primary);
+            text-align: center;
+            margin-top: 0;
+            padding-bottom: 15px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .form-section {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .stat-group {
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 10px;
+            background-color: rgba(74, 111, 165, 0.05);
+        }
+
+        .stat-title {
+            font-weight: bold;
+            color: var(--primary);
+            margin-bottom: 15px;
+            font-size: 1.1em;
+            text-align: center;
+            border-bottom: 1px dotted var(--border);
+            padding-bottom: 8px;
+        }
+
+        .input-group {
+            margin-bottom: 15px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: var(--text-light);
+            font-weight: 500;
+        }
+
+        input[type="number"] {
+            width: 100%;
+            padding: 10px 12px;
+            border: 1px solid var(--border);
+            border-radius: 4px;
+            font-size: 16px;
+            box-sizing: border-box;
+        }
+
+        input[type="number"]:focus {
+            border-color: var(--primary);
+            outline: none;
+            box-shadow: 0 0 0 2px rgba(74, 111, 165, 0.2);
+        }
+
+        button {
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            width: 100%;
+            transition: background-color 0.2s;
+            margin-top: 10px;
+            font-weight: bold;
+        }
+
+        button:hover {
+            background-color: var(--primary-dark);
+        }
+
+        .results {
+            margin-top: 30px;
+            border-top: 1px solid var(--border);
+            padding-top: 20px;
+            display: none;
+        }
+
+        .result-card {
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 15px;
+            background-color: rgba(92, 184, 92, 0.1);
+            border: 1px solid rgba(92, 184, 92, 0.3);
+        }
+
+        .result-title {
+            font-weight: bold;
+            color: var(--primary-dark);
+            font-size: 1.2em;
+            margin-bottom: 10px;
+        }
+
+        .stats {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+
+        .stat-pill {
+            background-color: var(--primary-light);
+            color: white;
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-size: 0.9em;
+        }
+
+        .score {
+            font-size: 1.2em;
+            font-weight: bold;
+            color: var(--secondary-dark);
+        }
+
+        .combinations {
+            margin-top: 20px;
+        }
+
+        .combination-item {
+            padding: 10px;
+            border-radius: 6px;
+            margin-bottom: 8px;
+            background-color: rgba(92, 184, 92, 0.05);
+            border: 1px solid rgba(92, 184, 92, 0.2);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .combination-fruits {
+            flex-grow: 1;
+        }
+
+        .fruit-pill {
+            display: inline-block;
+            background-color: var(--secondary-light);
+            color: white;
+            padding: 3px 8px;
+            border-radius: 15px;
+            font-size: 0.85em;
+            margin-right: 5px;
+            margin-bottom: 5px;
+        }
+
+        .total-fruits {
+            font-weight: bold;
+            background-color: var(--primary);
+            color: white;
+            padding: 3px 10px;
+            border-radius: 15px;
+            font-size: 0.85em;
+        }
+
+        .new-score {
+            font-weight: bold;
+            color: var(--secondary-dark);
+            padding: 3px 8px;
+            margin-left: 10px;
+        }
+
+        .no-result {
+            color: #dc3545;
+            text-align: center;
+            padding: 15px;
+            background-color: rgba(220, 53, 69, 0.1);
+            border-radius: 8px;
+            margin-top: 20px;
+        }
+
+        .congrats {
+            color: var(--secondary-dark);
+            text-align: center;
+            padding: 15px;
+            background-color: rgba(92, 184, 92, 0.1);
+            border-radius: 8px;
+            margin-top: 10px;
+            font-weight: bold;
+        }
+
+        @media (max-width: 600px) {
+            .container {
+                padding: 15px;
+            }
+            
+            .stats {
+                flex-direction: column;
+                gap: 5px;
+            }
+            
+            .combination-item {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            
+            .total-fruits {
+                margin-top: 8px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>艾比资质计算器</h1>
+        
+        <div class="form-section">
+            <div class="stat-group">
+                <div class="stat-title">生命属性</div>
+                <div class="input-group">
+                    <label for="living_upper">生命上限</label>
+                    <input type="number" id="living_upper" step="0.01" placeholder="输入生命上限">
+                </div>
+                <div class="input-group">
+                    <label for="living_curr">当前生命值</label>
+                    <input type="number" id="living_curr" step="0.01" placeholder="输入当前生命值">
+                </div>
+                <div class="input-group">
+                    <label for="living_unit">一个果子增加的生命值</label>
+                    <input type="number" id="living_unit" step="0.01" placeholder="输入一个果子可以增加的生命值">
+                </div>
+            </div>
+            
+            <div class="stat-group">
+                <div class="stat-title">物理攻击属性</div>
+                <div class="input-group">
+                    <label for="material_attack_upper">物理攻击上限</label>
+                    <input type="number" id="material_attack_upper" step="0.01" placeholder="输入物理攻击上限">
+                </div>
+                <div class="input-group">
+                    <label for="material_attack_curr">当前物理攻击</label>
+                    <input type="number" id="material_attack_curr" step="0.01" placeholder="输入当前物理攻击">
+                </div>
+                <div class="input-group">
+                    <label for="material_attack_unit">一个果子增加的物理攻击</label>
+                    <input type="number" id="material_attack_unit" step="0.01" placeholder="输入一个果子可以增加的物理攻击">
+                </div>
+            </div>
+            
+            <div class="stat-group">
+                <div class="stat-title">法术攻击属性</div>
+                <div class="input-group">
+                    <label for="magic_attack_upper">法术攻击上限</label>
+                    <input type="number" id="magic_attack_upper" step="0.01" placeholder="输入法术攻击上限">
+                </div>
+                <div class="input-group">
+                    <label for="magic_attack_curr">当前法术攻击</label>
+                    <input type="number" id="magic_attack_curr" step="0.01" placeholder="输入当前法术攻击">
+                </div>
+                <div class="input-group">
+                    <label for="magic_attack_unit">一个果子增加的法术攻击</label>
+                    <input type="number" id="magic_attack_unit" step="0.01" placeholder="输入一个果子可以增加的法术攻击">
+                </div>
+            </div>
+            
+            <div class="stat-group">
+                <div class="stat-title">法术防御属性</div>
+                <div class="input-group">
+                    <label for="magic_defense_upper">法术防御上限</label>
+                    <input type="number" id="magic_defense_upper" step="0.01" placeholder="输入法术防御上限">
+                </div>
+                <div class="input-group">
+                    <label for="magic_defense_curr">当前法术防御</label>
+                    <input type="number" id="magic_defense_curr" step="0.01" placeholder="输入当前法术防御">
+                </div>
+                <div class="input-group">
+                    <label for="magic_defense_unit">一个果子增加的法术防御</label>
+                    <input type="number" id="magic_defense_unit" step="0.01" placeholder="输入一个果子可以增加的法术防御">
+                </div>
+            </div>
+            
+            <div class="stat-group">
+                <div class="stat-title">物理防御属性</div>
+                <div class="input-group">
+                    <label for="material_defense_upper">物理防御上限</label>
+                    <input type="number" id="material_defense_upper" step="0.01" placeholder="输入物理防御上限">
+                </div>
+                <div class="input-group">
+                    <label for="material_defense_curr">当前物理防御</label>
+                    <input type="number" id="material_defense_curr" step="0.01" placeholder="输入当前物理防御">
+                </div>
+                <div class="input-group">
+                    <label for="material_defense_unit">一个果子增加的物理防御</label>
+                    <input type="number" id="material_defense_unit" step="0.01" placeholder="输入一个果子可以增加的物理防御">
+                </div>
+            </div>
+        </div>
+        
+        <button id="calculate">计算资质</button>
+        
+        <div id="results" class="results">
+            <div class="result-card">
+                <div class="result-title">当前属性分析</div>
+                <div class="stats">
+                    <div class="stat-pill" id="current-living">生命: 0</div>
+                    <div class="stat-pill" id="current-material-attack">物攻: 0</div>
+                    <div class="stat-pill" id="current-magic-attack">法攻: 0</div>
+                    <div class="stat-pill" id="current-magic-defense">法防: 0</div>
+                    <div class="stat-pill" id="current-material-defense">物防: 0</div>
+                </div>
+                <div class="score">当前得分: <span id="current-score">0</span></div>
+                <div id="congrats" class="congrats" style="display:none;">恭喜，您的艾比资质已经达到 90 分！</div>
+            </div>
+            
+            <div class="combinations">
+                <div class="result-title">可行组合（按总果子数排序）</div>
+                <div id="combinations-list"></div>
+                <div id="no-result" class="no-result" style="display:none;">无法在 6 个资质果内达到 90 分！</div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const calculateBtn = document.getElementById('calculate');
+            calculateBtn.addEventListener('click', calculate);
+            
+            // 填充一些示例数据（可选）
+            function fillSampleData() {
+                document.getElementById('living_upper').value = '100';
+                document.getElementById('living_curr').value = '90';
+                document.getElementById('living_unit').value = '0.5';
+                document.getElementById('material_attack_upper').value = '50';
+                document.getElementById('material_attack_curr').value = '45';
+                document.getElementById('material_attack_unit').value = '0.25';
+                document.getElementById('magic_attack_upper').value = '40';
+                document.getElementById('magic_attack_curr').value = '35';
+                document.getElementById('magic_attack_unit').value = '0.25';
+                document.getElementById('magic_defense_upper').value = '30';
+                document.getElementById('magic_defense_curr').value = '25';
+                document.getElementById('magic_defense_unit').value = '0.25';
+                document.getElementById('material_defense_upper').value = '30';
+                document.getElementById('material_defense_curr').value = '25';
+                document.getElementById('material_defense_unit').value = '0.25';
+            }
+            
+            // 如果需要示例数据，取消下面这行的注释
+            // fillSampleData();
+            
+            function getFloatInput(id) {
+                const value = document.getElementById(id).value;
+                if (!value || isNaN(parseFloat(value))) {
+                    alert(`请为${id.replace(/_/g, ' ')}输入有效的数字！`);
+                    throw new Error('Invalid input');
+                }
+                return Math.round(parseFloat(value) * 100) / 100;
+            }
+            
+            function getScore(living, material_attack, material_defense, magic_attack, magic_defense) {
+                return Math.floor((living + material_attack) * 0.625 + (material_defense + magic_attack + magic_defense) * 1.25);
+            }
+            
+            function calculate() {
+                try {
+                    // 获取所有输入
+                    const living_upper = getFloatInput('living_upper');
+                    const living_curr = getFloatInput('living_curr');
+                    const living_unit = getFloatInput('living_unit');
+                    const material_attack_upper = getFloatInput('material_attack_upper');
+                    const material_attack_curr = getFloatInput('material_attack_curr');
+                    const material_attack_unit = getFloatInput('material_attack_unit');
+                    const magic_attack_upper = getFloatInput('magic_attack_upper');
+                    const magic_attack_curr = getFloatInput('magic_attack_curr');
+                    const magic_attack_unit = getFloatInput('magic_attack_unit');
+                    const magic_defense_upper = getFloatInput('magic_defense_upper');
+                    const magic_defense_curr = getFloatInput('magic_defense_curr');
+                    const magic_defense_unit = getFloatInput('magic_defense_unit');
+                    const material_defense_upper = getFloatInput('material_defense_upper');
+                    const material_defense_curr = getFloatInput('material_defense_curr');
+                    const material_defense_unit = getFloatInput('material_defense_unit');
+                    
+                    // 计算各项值
+                    const living = Math.ceil(20 - Math.round((living_upper - living_curr) * 100) / 100 / living_unit);
+                    const material_attack = Math.ceil(20 - Math.round((material_attack_upper - material_attack_curr) * 100) / 100 / material_attack_unit);
+                    const magic_attack = Math.ceil(20 - Math.round((magic_attack_upper - magic_attack_curr) * 100) / 100 / magic_attack_unit);
+                    const magic_defense = Math.ceil(20 - Math.round((magic_defense_upper - magic_defense_curr) * 100) / 100 / magic_defense_unit);
+                    const material_defense = Math.ceil(20 - Math.round((material_defense_upper - material_defense_curr) * 100) / 100 / material_defense_unit);
+                    
+                    // 更新UI显示当前值
+                    document.getElementById('current-living').textContent = `生命: ${living}`;
+                    document.getElementById('current-material-attack').textContent = `物攻: ${material_attack}`;
+                    document.getElementById('current-magic-attack').textContent = `法攻: ${magic_attack}`;
+                    document.getElementById('current-magic-defense').textContent = `法防: ${magic_defense}`;
+                    document.getElementById('current-material-defense').textContent = `物防: ${material_defense}`;
+                    
+                    // 计算总分
+                    const score = getScore(living, material_attack, material_defense, magic_attack, magic_defense);
+                    document.getElementById('current-score').textContent = score;
+                    
+                    // 检查是否已达90分
+                    if (score >= 90) {
+                        document.getElementById('congrats').style.display = 'block';
+                    } else {
+                        document.getElementById('congrats').style.display = 'none';
+                    }
+                    
+                    // 根据各项数值计算是否能在6个资质果内达到90分
+                    const upper_boundary = 18;
+                    const living_candidate = Math.max(upper_boundary - living, 0);
+                    const material_attack_candidate = Math.max(upper_boundary - material_attack, 0);
+                    const material_defense_candidate = Math.max(upper_boundary - material_defense, 0);
+                    const magic_attack_candidate = Math.max(upper_boundary - magic_attack, 0);
+                    const magic_defense_candidate = Math.max(upper_boundary - magic_defense, 0);
+                    
+                    // 计算所有可能的组合
+                    const results = [];
+                    
+                    // 生成所有可能的组合
+                    for (let l = 0; l <= living_candidate; l++) {
+                        for (let ma = 0; ma <= material_attack_candidate; ma++) {
+                            for (let md = 0; md <= material_defense_candidate; md++) {
+                                for (let mga = 0; mga <= magic_attack_candidate; mga++) {
+                                    for (let mgd = 0; mgd <= magic_defense_candidate; mgd++) {
+                                        // 检查总果子数是否小于等于6
+                                        const totalUsed = l + ma + md + mga + mgd;
+                                        if (totalUsed <= 6) {
+                                            // 计算新属性值
+                                            const newLiving = living + l;
+                                            const newMaterialAttack = material_attack + ma;
+                                            const newMaterialDefense = material_defense + md;
+                                            const newMagicAttack = magic_attack + mga;
+                                            const newMagicDefense = magic_defense + mgd;
+                                            
+                                            // 计算新分数
+                                            const newScore = getScore(newLiving, newMaterialAttack, newMaterialDefense, newMagicAttack, newMagicDefense);
+                                            
+                                            // 如果分数达到90，记录这个组合
+                                            if (newScore >= 90) {
+                                                const outputParts = [];
+                                                if (l > 0) outputParts.push(`生命果: ${l}`);
+                                                if (ma > 0) outputParts.push(`物攻果: ${ma}`);
+                                                if (mga > 0) outputParts.push(`法攻果: ${mga}`);
+                                                if (mgd > 0) outputParts.push(`法防果: ${mgd}`);
+                                                if (md > 0) outputParts.push(`物防果: ${md}`);
+                                                
+                                                results.push({
+                                                    totalUsed: totalUsed,
+                                                    output: outputParts,
+                                                    newScore: newScore
+                                                });
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    
+                    // 按总果子数排序
+                    results.sort((a, b) => a.totalUsed - b.totalUsed);
+                    
+                    // 更新UI显示结果
+                    const combinationsList = document.getElementById('combinations-list');
+                    combinationsList.innerHTML = '';
+                    
+                    if (results.length > 0) {
+                        document.getElementById('no-result').style.display = 'none';
+                        
+                        results.forEach(result => {
+                            const combinationItem = document.createElement('div');
+                            combinationItem.className = 'combination-item';
+                            
+                            const fruitsDiv = document.createElement('div');
+                            fruitsDiv.className = 'combination-fruits';
+                            
+                            result.output.forEach(fruit => {
+                                const fruitPill = document.createElement('span');
+                                fruitPill.className = 'fruit-pill';
+                                fruitPill.textContent = fruit;
+                                fruitsDiv.appendChild(fruitPill);
+                            });
+                            
+                            const totalDiv = document.createElement('div');
+                            totalDiv.className = 'total-fruits';
+                            totalDiv.textContent = `总果子数: ${result.totalUsed}`;
+                            
+                            const scoreDiv = document.createElement('div');
+                            scoreDiv.className = 'new-score';
+                            scoreDiv.textContent = `新得分: ${result.newScore}`;
+                            
+                            combinationItem.appendChild(fruitsDiv);
+                            combinationItem.appendChild(totalDiv);
+                            combinationItem.appendChild(scoreDiv);
+                            
+                            combinationsList.appendChild(combinationItem);
+                        });
+                    } else {
+                        document.getElementById('no-result').style.display = 'block';
+                    }
+                    
+                    // 显示结果区域
+                    document.getElementById('results').style.display = 'block';
+                    
+                } catch (error) {
+                    console.error('计算错误:', error);
+                }
+            }
+        });
+    </script>
+</body>
+</html>
