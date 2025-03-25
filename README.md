@@ -5,7 +5,7 @@
 
 
 
-通过 [lgc0208.github.io/eggy_qualification](lgc0208.github.io/eggy_qualification) 访问
+通过 [https://lgc0208.github.io/eggy_qualification/](https://lgc0208.github.io/eggy_qualification/) 访问
 
 
 输入当前艾比所缺少的格子，系统会自动输出可以让其达到彩光（90 分）的资质果搭配。
