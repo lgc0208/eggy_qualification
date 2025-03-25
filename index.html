@@ -4,6 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>艾比资质计算器</title>
+    <!-- 引入Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
     <style>
         :root {
             --primary: #4a6fa5;
@@ -220,6 +223,24 @@
             margin-top: 10px;
             font-weight: bold;
         }
+        
+        /* 添加访问计数器样式 */
+        .visitor-counter {
+            text-align: center;
+            margin-top: 20px;
+            padding: 10px;
+            background-color: rgba(74, 111, 165, 0.05);
+            border-radius: 8px;
+            border: 1px dashed var(--border);
+            font-size: 0.9em;
+            color: var(--text-light);
+        }
+        
+        .visitor-count {
+            font-weight: bold;
+            color: var(--primary);
+            font-size: 1.1em;
+        }
 
         @media (max-width: 600px) {
             .container {
@@ -245,6 +266,11 @@
 <body>
     <div class="container">
         <h1>艾比资质计算器</h1>
+        
+        <!-- 添加访问计数器 -->
+        <div class="visitor-counter">
+            当前网站总访问量: <span id="visitor-count" class="visitor-count">加载中...</span>
+        </div>
         
         <div class="form-section">
             <div class="stat-group">
@@ -289,6 +315,7 @@
                     <label for="material_defense">当前缺少的物理防御格数</label>
                     <input type="number" id="material_defense" step="1" min="0" max="20" placeholder="输入当前缺少的物理防御格数">
                     <p id="error-message-material-defense" style="color: red; display: none;">请输入 0 到 20 之间的数字！</p>
+                </div>
             </div>
         </div>
         
@@ -317,6 +344,47 @@
     </div>
 
     <script>
+        // 初始化Firebase
+        const firebaseConfig = {
+            apiKey: "AIzaSyA5V8L5UoVSmnG_mvcN08vFAeyB2zSRwbw",
+            authDomain: "eggy-qualification.firebaseapp.com",
+            databaseURL: "https://eggy-qualification-default-rtdb.asia-southeast1.firebasedatabase.app",
+            projectId: "eggy-qualification",
+            storageBucket: "eggy-qualification.firebasestorage.app",
+            messagingSenderId: "722415747903",
+            appId: "1:722415747903:web:eba4d98a193caffeea498a",
+            measurementId: "G-7SN3ZN7HH9"
+        };
+        
+        // 初始化Firebase应用
+        firebase.initializeApp(firebaseConfig);
+        
+        // 获取对数据库的引用
+        const database = firebase.database();
+        
+        // 更新访问计数
+        function updateVisitorCount() {
+            const visitorCountRef = database.ref('visitorCount');
+            
+            // 事务操作确保即使有多个用户同时访问也能正确计数
+            visitorCountRef.transaction((currentCount) => {
+                return (currentCount || 0) + 1;
+            }, (error, committed, snapshot) => {
+                if (error) {
+                    console.error('更新访问计数失败:', error);
+                } else if (committed) {
+                    const count = snapshot.val();
+                    document.getElementById('visitor-count').textContent = count;
+                }
+            });
+            
+            // 监听实时更新
+            visitorCountRef.on('value', (snapshot) => {
+                const count = snapshot.val() || 0;
+                document.getElementById('visitor-count').textContent = count;
+            });
+        }
+        
         document.getElementById("living").addEventListener("input", function () {
             const input = parseFloat(this.value); // 获取输入值
             const errorMessage = document.getElementById("error-message-living");
@@ -378,9 +446,11 @@
         });
 
         document.addEventListener('DOMContentLoaded', function() {
+            // 更新访问计数
+            updateVisitorCount();
+            
             const calculateBtn = document.getElementById('calculate');
             calculateBtn.addEventListener('click', calculate);
-            
             
             function getIntInput(id) {
                 const value = document.getElementById(id).value;
